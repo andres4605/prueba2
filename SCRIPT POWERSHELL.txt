@@ -1,0 +1,18 @@
+$PDC = "SRV-ADDS-01.diaconia.local"
+$SearchString = "LDAP://"
+$SearchString += $PDC + "/"
+#$DistinguishedName = "DC=$($domainObj.Name.Replace('.', ',DC='))"
+$SearchString += $DistinguishedName
+$Searcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]$SearchString)
+$objDomain = New-Object System.DirectoryServices.DirectoryEntry
+$Searcher.SearchRoot = $objDomain
+$Searcher.filter="samAccountName=*.nina"
+$Output= ""
+$Result = $Searcher.FindAll()
+Foreach($obj in $Result)
+{
+    Write-Host $obj.Properties.samaccountname = $obj.Properties.sn $obj.Properties.extensionattribute11 $obj.Properties.givenname  $obj.Properties.extensionattribute10 = $obj.Properties.samaccountname = $obj.Properties.displayname = $obj.Properties.physicaldeliveryofficename = $obj.Properties.department = $obj.Properties.title
+    $prueba = $obj.Properties.samaccountname + ',' + $obj.Properties.sn + $obj.Properties.extensionattribute11 + $obj.Properties.givenname + $obj.Properties.extensionattribute10 + ',' + $obj.Properties.displayname + ',' + $obj.Properties.physicaldeliveryofficename + ',' + $obj.Properties.department + ',' + $obj.Properties.title + ',' + $obj.Properties.mail
+    $Output += $prueba
+}
+$Output | Out-File  "\\192.168.130.85\Test\iber.txt"
